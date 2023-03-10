@@ -16,5 +16,13 @@ public class Disease {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long diseaseId;
 
-
+    private String diseaseName;
+    private String diseaseImg;
+    private String diseaseRelated;
+    private String diseaseSymptoms;
+    private String diseaseDepartment;
+    private String diseaseDefine;
+    private String diseaseCause;
+    private String diseaseDiagnose;
+    private String diseaseTreat;
 }

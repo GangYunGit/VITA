@@ -11,12 +11,11 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "symptom")
 public class Symptom {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long symptomId;
-
     private String symptomName;
-
     private String symptomPart;
 
 }

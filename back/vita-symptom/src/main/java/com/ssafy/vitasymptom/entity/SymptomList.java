@@ -19,4 +19,8 @@ public class SymptomList {
     @ManyToOne(cascade = CascadeType.MERGE, targetEntity = Symptom.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "symptom_id")
     private Symptom symptom;
+
+    @ManyToOne(cascade = CascadeType.MERGE, targetEntity = Disease.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "disease_id")
+    private Disease disease;
 }
