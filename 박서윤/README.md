@@ -34,3 +34,63 @@ seoyoon's readme!!!!
 ### Result
 ---
 성공!
+
+
+# 개발일지
+
+**[ 2023-03-15 ]**
+
+### What I Did
+---
+- 주피터 노트북으로 파이스파크 코드 테스트
+
+### Issue (발생한 문제, 기록할 가치있는 내용)
+---
+
+
+### Effort
+---
+### 1. 로컬에 Jupyter Notebook 설치
+
+```bash
+pip install notebook
+```
+
+### 2. Jupyter Notebook 실행
+
+- [http://localhost:8888](http://localhost:8888) 연결
+
+```bash
+jupyter notebook
+```
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/8b6f55a7-5b92-40e0-9d6a-5666be9a6913/Untitled.png)
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/0c60e1dd-3ff0-401b-aee5-708e6a584a9e/Untitled.png)
+
+Jupyter Notebook 페이지로 자동 이동
+
+### 3. Jupyter Notebook에 pyspark 설치
+
+- pyspark 설치
+
+```bash
+!pip install pyspark
+```
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/ea9ce217-d336-431e-8317-cc6c0f402acd/Untitled.png)
+
+- pyspark 버전 확인
+
+```bash
+from pyspark import SparkContext, SparkConf
+
+sc = SparkContext("local[*]")
+sc.version
+```
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/abda54cb-01b5-4a3b-bfe3-3cfabd58beef/Untitled.png)
+
+
+### Result
+---
