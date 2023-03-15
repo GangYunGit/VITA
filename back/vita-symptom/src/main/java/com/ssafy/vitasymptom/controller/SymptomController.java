@@ -1,5 +1,6 @@
 package com.ssafy.vitasymptom.controller;
 
+import com.ssafy.vitasymptom.dto.SymptomPartListDto;
 import com.ssafy.vitasymptom.entity.Symptom;
 import com.ssafy.vitasymptom.service.SymptomService;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +26,10 @@ public class SymptomController {
     public ResponseEntity<?> symptomPartList() {
         try {
             System.out.println("SymptomController 실행, symptom_part 가져오기");
-            List<Symptom> symptomPartList = symptomService.getAllSymptomPart();
+            List<String> symptomPartList = symptomService.getAllSymptomPartList();
             if (symptomPartList != null && !symptomPartList.isEmpty()) {
                 System.out.println("symptomPartList = " + symptomPartList);
-                return new ResponseEntity<List<Symptom>>(symptomPartList, HttpStatus.OK);
+                return new ResponseEntity<List<String>>(symptomPartList, HttpStatus.OK);
             } else {
                 return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
             }

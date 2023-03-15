@@ -25,4 +25,5 @@ public class Disease {
     private String diseaseCause;
     private String diseaseDiagnose;
     private String diseaseTreat;
+
 }
