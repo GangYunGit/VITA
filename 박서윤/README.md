@@ -1,4 +1,4 @@
-seoyoon's readme!!!!
+seoyoon's readme!!!!!
 
 # 개발일지
 
