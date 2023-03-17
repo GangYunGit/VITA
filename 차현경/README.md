@@ -48,4 +48,3 @@
     - SparkContext에서 사용할 수 있는 기능은 모두 SparkSession에서 사용 가능
         - spark.sparkContext : 애플리케이션 전체의 실행 관련 정보 집약 객체로 스케줄러 등이 포함 (RDD 생성 시)
         - spark.sparkSession : 스파크 컨텍스트에 세션 정보가 추가로 포함 (DataFrame 생성 시)
-
