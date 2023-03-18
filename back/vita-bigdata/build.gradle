@@ -29,6 +29,11 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+
+	// https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-common
+	implementation 'org.apache.hadoop:hadoop-common:3.3.2'
+	// https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-client
+	implementation 'org.apache.hadoop:hadoop-client:3.3.2'
 }
 
 tasks.named('test') {
