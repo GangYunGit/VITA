@@ -1,11 +1,12 @@
 package com.ssafy.vitauser.controller;
 
-import com.ssafy.vitauser.dto.FriendListDto;
-import com.ssafy.vitauser.dto.FriendListInterface;
-import com.ssafy.vitauser.entity.Users;
+import com.ssafy.vitauser.dto.FriendApplyListDto;
+import com.ssafy.vitauser.dto.FriendReceivingListDto;
+import com.ssafy.vitauser.dto.FriendSendingListDto;
 import com.ssafy.vitauser.service.FriendService;
+import com.ssafy.vitauser.service.UsersService;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,19 +23,37 @@ import java.util.List;
 public class FriendController {
 
     private FriendService friendService;
+    private UsersService usersService;
 
     @GetMapping("/hello")
     public ResponseEntity<?> hello() {
         return new ResponseEntity<String>("hello", HttpStatus.OK);
     }
 
-    @GetMapping("/test")
+    @GetMapping
     public ResponseEntity<?> friendList(@RequestHeader HttpHeaders headers) {
         try {
-            List<FriendListInterface> friendList = friendService.getMyFriendList(headers.getFirst("userID"));
+//            Users user = usersService.findByUserId(headers.getFirst("userID"));
+            List<FriendSendingListDto> friendList = friendService.getSendingFriendList(headers.getFirst("userID"));
             System.out.println("asdasd");
-            if (friendList != null) {
-                return new ResponseEntity<List<FriendListInterface>>(friendList, HttpStatus.OK);
+            if (friendList != null && !friendList.isEmpty()) {
+                return new ResponseEntity<List<FriendSendingListDto>>(friendList, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+            }
+        } catch (Exception e) {
+            return exceptionHandling(e);
+        }
+    }
+
+    @GetMapping("/applyList")
+    public ResponseEntity<?> applyingFriendList(@RequestHeader HttpHeaders headers) {
+        try {
+//            Users user = usersService.findByUserId(headers.getFirst("userID"));
+            List<FriendApplyListDto> friendList = friendService.getApplyingFriendList(headers.getFirst("userID"));
+            System.out.println("asdasd");
+            if (friendList != null && !friendList.isEmpty()) {
+                return new ResponseEntity<List<FriendApplyListDto>>(friendList, HttpStatus.OK);
             } else {
                 return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
             }
@@ -43,6 +62,7 @@ public class FriendController {
         }
 
     }
+
 
     private ResponseEntity<?> exceptionHandling(Exception e) {
         e.printStackTrace();
