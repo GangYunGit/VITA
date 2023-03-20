@@ -10,7 +10,7 @@ import java.time.ZonedDateTime;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class FriendSendingListDto {
+public class FriendSendingListDto{
 
     private String userNickname;
     private String userId;

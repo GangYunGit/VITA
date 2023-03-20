@@ -2,6 +2,7 @@ package com.ssafy.vitauser.service;
 
 import com.ssafy.vitauser.dto.FriendApplyListDto;
 import com.ssafy.vitauser.dto.FriendReceivingListDto;
+import com.ssafy.vitauser.dto.FriendSearchListDto;
 import com.ssafy.vitauser.dto.FriendSendingListDto;
 
 import java.util.List;
@@ -12,6 +13,9 @@ public interface FriendService {
 //    List<FriendReceivingListDto> getReceivingFriendList(String userId);
     List<FriendApplyListDto> getApplyingFriendList(String userId);
 
+    List<FriendSearchListDto> getSearchFriendList(String userId);
+
+    void applyFriend(String userId, String userNickname);
     void acceptFriend();
     void rejectFriend();
 }

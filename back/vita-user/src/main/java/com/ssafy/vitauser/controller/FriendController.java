@@ -2,18 +2,18 @@ package com.ssafy.vitauser.controller;
 
 import com.ssafy.vitauser.dto.FriendApplyListDto;
 import com.ssafy.vitauser.dto.FriendReceivingListDto;
+import com.ssafy.vitauser.dto.FriendSearchListDto;
 import com.ssafy.vitauser.dto.FriendSendingListDto;
+import com.ssafy.vitauser.entity.Friend;
 import com.ssafy.vitauser.service.FriendService;
 import com.ssafy.vitauser.service.UsersService;
 import lombok.AllArgsConstructor;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,6 +24,7 @@ public class FriendController {
 
     private FriendService friendService;
     private UsersService usersService;
+    private ModelMapper modelMapper;
 
     @GetMapping("/hello")
     public ResponseEntity<?> hello() {
@@ -46,6 +47,12 @@ public class FriendController {
         }
     }
 
+    @PostMapping
+    public void applyFriend(@RequestHeader HttpHeaders headers, @RequestBody String userNickname) throws Exception {
+        friendService.applyFriend(headers.getFirst("userID"), userNickname);
+    }
+
+
     @GetMapping("/applyList")
     public ResponseEntity<?> applyingFriendList(@RequestHeader HttpHeaders headers) {
         try {
@@ -54,6 +61,22 @@ public class FriendController {
             System.out.println("asdasd");
             if (friendList != null && !friendList.isEmpty()) {
                 return new ResponseEntity<List<FriendApplyListDto>>(friendList, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+            }
+        } catch (Exception e) {
+            return exceptionHandling(e);
+        }
+
+    }
+
+    @GetMapping("/apply")
+    public ResponseEntity<?> searchFriendList(@RequestHeader HttpHeaders headers) {
+        try {
+            List<FriendSearchListDto> friendList = friendService.getSearchFriendList(headers.getFirst("userID"));
+            System.out.println("asdasd");
+            if (friendList != null && !friendList.isEmpty()) {
+                return new ResponseEntity<List<FriendSearchListDto>>(friendList, HttpStatus.OK);
             } else {
                 return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
             }

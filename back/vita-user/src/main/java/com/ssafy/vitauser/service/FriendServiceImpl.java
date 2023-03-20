@@ -1,8 +1,7 @@
 package com.ssafy.vitauser.service;
 
-import com.ssafy.vitauser.dto.FriendApplyListDto;
-import com.ssafy.vitauser.dto.FriendReceivingListDto;
-import com.ssafy.vitauser.dto.FriendSendingListDto;
+import com.ssafy.vitauser.dto.*;
+import com.ssafy.vitauser.entity.Friend;
 import com.ssafy.vitauser.repository.FriendRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +35,28 @@ public class FriendServiceImpl implements FriendService{
     @Override
     public List<FriendApplyListDto> getApplyingFriendList(String userId) {
         return friendRepository.findByFriendReceivingUser_userIdAndFriendStatus(userId, "applied");
+    }
+
+    @Override
+    public List<FriendSearchListDto> getSearchFriendList(String userId) {
+        return friendRepository.getFriendSearchList(userId);
+    }
+
+    @Override
+    public void applyFriend(String userId, String userNickname) {
+        // userId = 내 아이디, userNickname = 신청 보낼 유저의 닉네임
+        FriendDto friend = friendRepository.findByFriendSendingUserId(userId);
+        List<FriendSendingListDto> sendingUser = friendRepository.findByFriendSendingUser_userIdAndFriendStatus(userId, "accepted");
+        List<FriendReceivingListDto> recevingUser = friendRepository.findByFriendReceivingUser_userNicknameAndFriendStatus(userNickname, "accepted");
+
+        if (sendingUser.isEmpty() && recevingUser.isEmpty()) {
+            friend = new FriendDto();
+            friend.setFriendSendingUserId(userId);
+            friend.setFriendReceivingUserId("4");
+            friend.setFriendStatus("applied");
+        }
+
+        friendRepository.save(friend);
     }
 
     @Override
