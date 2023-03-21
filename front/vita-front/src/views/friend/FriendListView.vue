@@ -41,14 +41,16 @@
 
         <div id="list-div" v-for="lists in friendlist" :key="lists.id">
           <span style="font-weight: 600">
-            {{ lists.id }}
+            {{ lists.user_id }}
             <b-avatar
               variant="info"
               src="https://placekitten.com/300/300"
             ></b-avatar
           ></span>
-          <span style="font-weight: 600">{{ lists.name }} </span>
-          <button id="btn-delete-friend">친구 삭제</button>
+          <span style="font-weight: 600">{{ lists.user_nickname }} </span>
+          <button id="btn-delete-friend" @click="deleteFriend(lists.user_id)">
+            친구 삭제
+          </button>
         </div>
       </div>
     </div>
@@ -57,6 +59,10 @@
 
 <script>
 import FriendAddModal from "@/components/friend/FriendAddModal.vue";
+import axios from "axios";
+
+const SERVER_URL = "http://localhost:8080/friend";
+
 export default {
   name: "FriendListView",
   components: {
@@ -64,15 +70,46 @@ export default {
   },
   data: () => ({
     friendlist: [
-      { id: 1, name: "김광배", score: "10" },
-      { id: 2, name: "이광배", score: "20" },
-      { id: 3, name: "차광배", score: "30" },
+      // { id: 1, name: "김광배", score: "10" },
+      // { id: 2, name: "이광배", score: "20" },
+      // { id: 3, name: "차광배", score: "30" },
     ],
     friendpostlist: [
       { id: 1, name: "김광배", score: "10" },
       { id: 2, name: "이광배", score: "20" },
     ],
   }),
+  methods: {
+    getFriendList() {
+      axios
+        .get(SERVER_URL, {
+          headers: {
+            userID: "1",
+          },
+        })
+        .then((response) => {
+          response.data.map((data) => {
+            this.friendlist.push(data);
+          });
+        });
+    },
+    deleteFriend(user_id) {
+      axios
+        .delete(SERVER_URL, {
+          headers: {
+            sendingUserId: "1",
+            receivingUserId: user_id,
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          this.$forceUpdate();
+        });
+    },
+  },
+  created() {
+    this.getFriendList();
+  },
 };
 </script>
 
