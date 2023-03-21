@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 public class UsersServiceImpl implements UsersService {
@@ -16,5 +18,10 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public Users findByUserId(String userId) {
         return usersRepository.findByUserId(userId);
+    }
+
+    @Override
+    public List<Users> findAll() {
+        return usersRepository.findAll();
     }
 }

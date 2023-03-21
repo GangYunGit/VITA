@@ -1,27 +1,22 @@
 package com.ssafy.vitauser.dto;
 
 import com.ssafy.vitauser.entity.Friend;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import java.time.ZonedDateTime;
-
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class FriendSendingListDto{
+public class FriendSendingListDto extends UserInfoDto {
 
-    private String userNickname;
-    private String userId;
-    private String userImg;
-    private String userHistoryImg;
-    private ZonedDateTime createdDate;
-
+    @Builder
     public FriendSendingListDto(Friend friend) {
         this.userId = friend.getFriendReceivingUser().getUserId();
         this.userNickname = friend.getFriendReceivingUser().getUserNickname();
         this.userImg = friend.getFriendReceivingUser().getUserImg();
+        this.userScore = friend.getFriendReceivingUser().getUserScore();
         this.createdDate = friend.getFriendReceivingUser().getCreatedDate();
     }
 }
