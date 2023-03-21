@@ -80,8 +80,6 @@ public class FriendController {
 
     @PutMapping
     public void acceptFriend(@RequestHeader HttpHeaders suId, @RequestHeader HttpHeaders ruId) throws Exception {
-        System.out.println(suId.getFirst("sendingUserId"));
-        System.out.println(ruId.getFirst("receivingUserId"));
         friendService.acceptFriend(suId.getFirst("sendingUserId"), ruId.getFirst("receivingUserId"), "applied");
     }
 

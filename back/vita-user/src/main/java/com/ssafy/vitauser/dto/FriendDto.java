@@ -2,15 +2,13 @@ package com.ssafy.vitauser.dto;
 
 import com.ssafy.vitauser.entity.Friend;
 import com.ssafy.vitauser.entity.Users;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@AllArgsConstructor
 @RequiredArgsConstructor
-public class FriendDto {
+public class FriendDto extends UserInfoDto{
 
     private Long friendId;
     private String friendStatus;

@@ -72,7 +72,8 @@ public class FriendServiceImpl implements FriendService{
         System.out.println(friendStatus);
         System.out.println("-----------------");
         System.out.println(currentRelation);
-//        friendRepository.save(currentRelation.toEntity());
+        currentRelation.setFriendStatus("accepted");
+        friendRepository.save(currentRelation.toEntity());
     }
 
     @Override
