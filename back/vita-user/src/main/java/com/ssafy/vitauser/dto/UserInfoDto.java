@@ -20,12 +20,12 @@ public class UserInfoDto {
     protected String userHistoryImg;
     protected ZonedDateTime createdDate;
 
-    UserInfoDto(Users users) {
-        this.userNickname = users.getUserNickname();
-        this.userId = users.getUserId();
-        this.userImg = users.getUserImg();
-        this.userScore = users.getUserScore();
-        this.createdDate = users.getCreatedDate();
-    }
+//    UserInfoDto(Users users) {
+//        this.userNickname = users.getUserNickname();
+//        this.userId = users.getUserId();
+//        this.userImg = users.getUserImg();
+//        this.userScore = users.getUserScore();
+//        this.createdDate = users.getCreatedDate();
+//    }
 
 }

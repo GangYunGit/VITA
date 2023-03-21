@@ -26,4 +26,8 @@ public class Friend {
     @ManyToOne(cascade = CascadeType.MERGE, targetEntity = Users.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "friend_receiving_user_id")
     private Users friendReceivingUser;
+
+    public void acceptFriendRelation() {
+        this.friendStatus = "accepted";
+    }
 }

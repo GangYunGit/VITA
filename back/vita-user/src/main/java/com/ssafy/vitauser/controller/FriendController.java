@@ -38,6 +38,7 @@ public class FriendController {
     @Autowired
     private UsersService usersService;
 
+    // 테스트
     @GetMapping("/hello")
     public ResponseEntity<?> hello() {
         return new ResponseEntity<String>("hello", HttpStatus.OK);
@@ -72,25 +73,26 @@ public class FriendController {
         }
     }
 
-    @PostMapping
-    public void applyFriend(@RequestHeader HttpHeaders headers, @RequestBody Map<String, String> req) throws Exception {
-        System.out.println(req);
-        friendService.applyFriend(headers.getFirst("userID"), req.get("user_nickname"));
-    }
-
+    // 친구요청 수락하기 PUT
     @PutMapping
     public void acceptFriend(@RequestHeader HttpHeaders suId, @RequestHeader HttpHeaders ruId) throws Exception {
-        friendService.acceptFriend(suId.getFirst("sendingUserId"), ruId.getFirst("receivingUserId"), "applied");
+        friendService.acceptFriend(suId.getFirst("sendingUserId"), ruId.getFirst("receivingUserId"));
+    }
+
+    // 친구요청 거절 및 친구 삭제 DELETE
+    @DeleteMapping
+    public void rejectOrDeleteFriend(@RequestHeader HttpHeaders suId, @RequestHeader HttpHeaders ruId) throws Exception {
+        friendService.rejectOrDeleteFriend(suId.getFirst("sendingUserId"), ruId.getFirst("receivingUserId"));
     }
 
     // 친구 신청온 리스트 GET
     @GetMapping("/applyList")
     public ResponseEntity<?> applyingFriendList(@RequestHeader HttpHeaders headers) {
         try {
-            List<?> applyingFriendList = friendService.getApplyingFriendList(headers.getFirst("userID"));
+            List<FriendReceivingListDto> applyingFriendList = friendService.getApplyingFriendList(headers.getFirst("userID"));
             System.out.println("asdasd");
             if (applyingFriendList != null && !applyingFriendList.isEmpty()) {
-                return new ResponseEntity<List<?>>(applyingFriendList.stream().map(friend -> modelMapper.map(friend, FriendApplyListDto.class)).collect(Collectors.toList()), HttpStatus.OK);
+                return new ResponseEntity<List<FriendApplyListDto>>(applyingFriendList.stream().map(friend -> modelMapper.map(friend, FriendApplyListDto.class)).collect(Collectors.toList()), HttpStatus.OK);
             } else {
                 return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
             }
@@ -98,17 +100,19 @@ public class FriendController {
             return exceptionHandling(e);
         }
     }
-
    
     // 친구 신청 검색(친구로 등록이 안되어 있는 유저만 모두 보여주기) GET
     @GetMapping("/apply/{nickname}")
     public ResponseEntity<?> searchFriendList(@RequestHeader HttpHeaders headers, @PathVariable("nickname") String nickname) {
         try {
-            System.out.println("-----------------------------------------------");
-            System.out.println(nickname);
+
             String getUserId = headers.getFirst("userID");
             List<FriendSearchMapping> usersList = friendService.getSearchFriendList(getUserId, nickname);
+
+            // 목록에서 자신을 제외
             usersList.removeIf(users -> users.getUser_Id().equals(getUserId));
+
+            // 이미 친구로 등록된 사람들 제외
             usersList.removeIf(users -> Objects.equals(users.getFriend_status(), "accepted"));
 
             if (usersList != null && !usersList.isEmpty()) {
@@ -122,6 +126,12 @@ public class FriendController {
 
     }
 
+    //
+    @PostMapping("/apply")
+    public void applyFriend(@RequestHeader HttpHeaders headers, @RequestBody Map<String, String> req) throws Exception {
+        System.out.println(req);
+        friendService.applyFriend(headers.getFirst("userID"), req.get("user_nickname"));
+    }
 
     // 친구 랭킹 GET
     @GetMapping("/rank")
@@ -156,8 +166,6 @@ public class FriendController {
             return exceptionHandling(e);
         }
     }
-
-
 
     private ResponseEntity<?> exceptionHandling(Exception e) {
         e.printStackTrace();

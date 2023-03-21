@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -51,11 +52,11 @@ public class FriendServiceImpl implements FriendService{
     @Override
     public void applyFriend(String userId, String userNickname) {
         // userId = 내 아이디, userNickname = 신청 보낼 유저의 닉네임
-        List<FriendSendingListDto> sendingUserList = friendRepository.findByFriendSendingUser_userIdAndFriendStatus(userId, "accepted");
-        List<FriendReceivingListDto> receivingUserList = friendRepository.findByFriendReceivingUser_userIdAndFriendStatus(userNickname, "accepted");
+        Friend applySendInfo = friendRepository.findByFriendSendingUser_userIdAndFriendReceivingUser_userNicknameAndFriendStatus(userId, userNickname, "accepted");
+        Friend applyReceiveInfo = friendRepository.findByFriendSendingUser_userNicknameAndFriendReceivingUser_userIdAndFriendStatus(userNickname, userId, "accepted");
 
         FriendDto friend = new FriendDto();
-        if (sendingUserList.isEmpty() && receivingUserList.isEmpty()) {
+        if (applySendInfo == null && applyReceiveInfo == null) {
             friend.setFriendSendingUser(usersRepository.findByUserId(userId));
             friend.setFriendReceivingUser(usersRepository.findByUserNickname(userNickname));
             friend.setFriendStatus("applied");
@@ -64,20 +65,16 @@ public class FriendServiceImpl implements FriendService{
     }
 
     @Override
-    public void acceptFriend(String sendingUserId, String receivingUserId, String friendStatus) {
-        FriendDto currentRelation = friendRepository.findByFriendSendingUser_userIdAndFriendReceivingUser_userIdAndFriendStatus(sendingUserId, receivingUserId, friendStatus);
-        System.out.println("-----------------");
-        System.out.println(sendingUserId);
-        System.out.println(receivingUserId);
-        System.out.println(friendStatus);
-        System.out.println("-----------------");
-        System.out.println(currentRelation);
-        currentRelation.setFriendStatus("accepted");
-        friendRepository.save(currentRelation.toEntity());
+    public void acceptFriend(String sendingUserId, String receivingUserId) {
+        Friend currentRelation = friendRepository.findByFriendSendingUser_userIdAndFriendReceivingUser_userIdAndFriendStatus(sendingUserId, receivingUserId, "applied");
+        currentRelation.acceptFriendRelation();
+        friendRepository.save(currentRelation);
     }
 
     @Override
-    public void rejectFriend() {
-
+    public void rejectOrDeleteFriend(String sendingUserId, String receivingUserId) {
+        Friend rejectOrDeleteRelation = friendRepository.findByFriendSendingUser_userIdAndFriendReceivingUser_userId(sendingUserId, receivingUserId);
+        friendRepository.deleteById(rejectOrDeleteRelation.getFriendId());
     }
+
 }

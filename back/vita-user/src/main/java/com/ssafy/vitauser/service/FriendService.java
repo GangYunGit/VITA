@@ -13,6 +13,6 @@ public interface FriendService {
     List<FriendSearchMapping> getSearchFriendList(String userId, String userNickname);
 
     void applyFriend(String userId, String userNickname);
-    void acceptFriend(String sendingUserId, String receivingUserId, String friendStatus);
-    void rejectFriend();
+    void acceptFriend(String sendingUserId, String receivingUserId);
+    void rejectOrDeleteFriend(String sendingUserId, String receivingUserId);
 }
