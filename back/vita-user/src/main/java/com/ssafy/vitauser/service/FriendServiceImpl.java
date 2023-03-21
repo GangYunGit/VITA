@@ -74,7 +74,12 @@ public class FriendServiceImpl implements FriendService{
     @Override
     public void rejectOrDeleteFriend(String sendingUserId, String receivingUserId) {
         Friend rejectOrDeleteRelation = friendRepository.findByFriendSendingUser_userIdAndFriendReceivingUser_userId(sendingUserId, receivingUserId);
-        friendRepository.deleteById(rejectOrDeleteRelation.getFriendId());
+        Friend rejectOrDeleteReverseRelation = friendRepository.findByFriendSendingUser_userIdAndFriendReceivingUser_userId(receivingUserId, sendingUserId);
+        if (rejectOrDeleteRelation != null) {
+            friendRepository.deleteById(rejectOrDeleteRelation.getFriendId());
+        } else if (rejectOrDeleteReverseRelation != null) {
+            friendRepository.deleteById(rejectOrDeleteReverseRelation.getFriendId());
+        }
     }
 
 }
