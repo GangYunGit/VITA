@@ -29,6 +29,7 @@ public class WearableImpl implements Wearable {
 //    private final UsersRepo usersRepo;
     private final ModelMapper mapper = new ModelMapper();
 
+
     // 걸음수 달별
     @Override
     public List<StepMonthlyDto> stepMonthly(String userId) {
@@ -192,9 +193,19 @@ public class WearableImpl implements Wearable {
 
     // 모든 총합 점수 반환
     public List<TotalScoreDto> totalScore(String userId) {
+        mapper.getConfiguration().setAmbiguityIgnored(true);
         List<TotalScore> totalScoreList = totalScoreRepo.findByUsers_UserId(userId);
-        return totalScoreList.stream()
-                .map(totalScore -> mapper.map(totalScore, TotalScoreDto.class)).collect(Collectors.toList());
+        List<TotalScoreDto> totalScoreDtoList = totalScoreList.stream()
+                .map(totalScore -> mapper.map(totalScore, TotalScoreDto.class))
+                .collect(Collectors.toList());
+        // totalScore 구하기
+        for (TotalScoreDto t:totalScoreDtoList) {
+            int totalScore = t.getTotalScoreEnergy() + t.getTotalScoreWeight() +
+                             t.getTotalScoreSleep() + t.getTotalScoreRhr() +
+                             t.getTotalScoreStep() + t.getTotalScoreStress();
+            t.setTotalScore(totalScore/6);
+        }
+        return totalScoreDtoList;
     }
 
     // 연도별 데일리 종합 점수 반환
@@ -263,15 +274,15 @@ public class WearableImpl implements Wearable {
 //                .build()
 //                .parseClaimsJws(token)
 //                .getBody();
-        String secretKey = "youcantrevealthesecretkey1234012300040hjbvjhbjhvhjbjkbhjvjbjkn";
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(secretKey.getBytes())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+//        String secretKey = "youcantrevealthesecretkey1234012300040hjbvjhbjhvhjbjkbhjvjbjkn";
+//        Claims claims = Jwts.parserBuilder()
+//                .setSigningKey(secretKey.getBytes())
+//                .build()
+//                .parseClaimsJws(token)
+//                .getBody();
+//
+//        return claims.getSubject();
 
-        return claims.getSubject();
-
-//        return "2703629614";
+        return "2703629614";
     }
 }
