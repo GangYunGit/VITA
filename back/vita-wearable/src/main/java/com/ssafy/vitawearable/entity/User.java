@@ -15,7 +15,7 @@ import java.time.ZonedDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "users")
-public class Users {
+public class User {
 
     @Id
     private String userId;

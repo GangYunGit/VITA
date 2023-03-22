@@ -14,6 +14,9 @@ public interface Wearable {
     // 걸음수 일별
     List<StepDailyDto> stepDaily(String userId);
 
+//     걸음수 이전과 비교
+    StepPastAndNowDto stepPastAndNow(String userId);
+
 
     // 활동량 달별
     List<EnergyMonthlyDto> energyMonthly(String userId);

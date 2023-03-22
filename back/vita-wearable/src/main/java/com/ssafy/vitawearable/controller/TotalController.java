@@ -10,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -34,5 +37,29 @@ public class TotalController {
         String userId = wearable.getUserId(token);
 //        List<TotalScore> totalScore = totalScoreRepo.findByUsers_UserId(userId);
         return new ResponseEntity<>(wearable.yearTotalScore(userId,year),HttpStatus.valueOf(200));
+    }
+
+    @GetMapping("/")
+    public void test() {
+        ZonedDateTime zonedDateTime = ZonedDateTime.now();
+        ZonedDateTime zonedDateTime1 = ZonedDateTime.of(
+                2023,3,21,0,0,0,0, ZoneId.of("Asia/Seoul")
+        );
+        ZonedDateTime zonedDateTime2 = ZonedDateTime.of(
+                2023,3,15,0,0,0,0, ZoneId.of("Asia/Seoul")
+        );
+        ZonedDateTime zonedDateTime3 = ZonedDateTime.of(
+                2023,3,31,0,0,0,0, ZoneId.of("Asia/Seoul")
+        );
+        ZonedDateTime zonedDateTime4 = ZonedDateTime.of(
+                2023,4,1,0,0,0,0, ZoneId.of("Asia/Seoul")
+        );
+        DateTimeFormatter equalWeekFormatter = DateTimeFormatter.ofPattern("yyyy w");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy MM dd / W / F / w ");
+        System.out.println(zonedDateTime.format(equalWeekFormatter));
+        System.out.println(zonedDateTime1.format(equalWeekFormatter));
+        System.out.println(zonedDateTime2.format(equalWeekFormatter));
+        System.out.println(zonedDateTime3.format(equalWeekFormatter));
+        System.out.println(zonedDateTime4.format(equalWeekFormatter));
     }
 }

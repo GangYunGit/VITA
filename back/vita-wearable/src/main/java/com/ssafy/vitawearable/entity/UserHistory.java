@@ -1,29 +1,25 @@
 package com.ssafy.vitawearable.entity;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-
+import java.time.ZonedDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "friend")
-public class Friend {
+@Table(name = "user_history")
+public class UserHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long friendId;
-    private String friendStatus;
+    private Long userHistoryId;
+    private String userHistoryImg;
+    private ZonedDateTime createdDate;
 
     @ManyToOne(cascade = CascadeType.MERGE, targetEntity = User.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "friend_sending_user_id")
-    private User friendSendingUser;
-
-    @ManyToOne(cascade = CascadeType.MERGE, targetEntity = User.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "friend_receiving_user_id")
-    private User friendReceivingUser;
+    @JoinColumn(name = "user_id")
+    private User user;
 }
 
