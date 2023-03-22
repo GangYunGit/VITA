@@ -1,8 +1,6 @@
 package com.ssafy.vitawearable.controller;
 
-import com.ssafy.vitawearable.dto.EnergyDailyDto;
-import com.ssafy.vitawearable.dto.EnergyMonthlyDto;
-import com.ssafy.vitawearable.dto.EnergyWeeklyDto;
+import com.ssafy.vitawearable.dto.*;
 import com.ssafy.vitawearable.service.Wearable;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -63,17 +61,16 @@ public class EnergyController {
         return new ResponseEntity<>(wearable.energyDaily(userId), HttpStatus.valueOf(200));
     }
 
-//    // 활동량 일간 데이터
-//    @ApiOperation(
-//            value = "활동량 일별 데이터 요청",
-//            notes = "userId를 통해 활동량 일별 데이터를 json 형태로 반환한다",
-//            response = EnergyDailyDto.class,
-//            responseContainer = "List"
-//    )
-//    @GetMapping("/past")
-//    public ResponseEntity<List<EnergyDailyDto>> energyPastNow(@RequestHeader("token") String token) {
-//        String userId = wearable.getUserId(token);
-//        return new ResponseEntity<>(wearable.energyPastNow(userId), HttpStatus.valueOf(200));
-//    }
+    // 활동에너지 과거 비교 데이터
+    @ApiOperation(
+            value = "활동에너지 과거,현재 데이터 요청",
+            notes = "userId를 통해 활동에너지 과거,현재 데이터를 json 형태로 반환한다",
+            response = StepPastAndNowDto.class
+    )
+    @GetMapping("/past")
+    public ResponseEntity<EnergyPastAndNowDto> stepPast(@RequestHeader("token") String token) {
+        String userId = wearable.getUserId(token);
+        return new ResponseEntity<>(wearable.energyPastAndNow(userId), HttpStatus.valueOf(200));
+    }
 
 }

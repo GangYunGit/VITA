@@ -149,6 +149,70 @@ public class WearableImpl implements Wearable {
                 .map(daily -> mapper.map(daily, EnergyDailyDto.class)).collect(Collectors.toList());
     }
 
+    // 활동에너지 이전과 비교
+    public EnergyPastAndNowDto energyPastAndNow(String userId) {
+
+        EnergyPastAndNowDto energyPastAndNowDto = new EnergyPastAndNowDto();
+        // 해당 유저의 userHistory 가져오기
+        List<UserHistory> userHistoryList = userHistoryRepo.findByUser_UserId(userId);
+        // userHistory중 마지막을 가져오고, 거기서 생성일(export날짜)를 가지고 연,주 데이터를 'yyyy w'포멧으로 가져오기
+        ZonedDateTime LastExportTime = userHistoryList.get(userHistoryList.size()-1).getCreatedDate();
+        String lastExportWeek = LastExportTime.format(DateTimeFormatter.ofPattern("yyyy w"));
+        // 생성 주보다 이전 주 'yyyy w' 포멧
+        String pastExportWeek = LastExportTime.minusDays(7).format(DateTimeFormatter.ofPattern("yyyy w"));
+
+        List<WeeklyWearable> weeklyWearableList = weeklyWearableRepo.findByUser_UserId(userId);
+        List<MonthlyWearable> monthlyWearableList = monthlyWearableRepo.findByUser_UserId(userId);
+
+        // 현재 주 값 넣어주기
+        energyPastAndNowDto.setWeekNowWearableEnergy(
+                weeklyWearableList.stream()
+                        .filter(w -> w.getDate().format(DateTimeFormatter.ofPattern("yyyy w"))
+                                .equals(lastExportWeek))
+                        .findFirst().get().getWeeklyWearableEnergy());
+
+        // 이전 주 값 넣어주기
+        energyPastAndNowDto.setWeekPastWearableEnergy(
+                weeklyWearableList.stream()
+                        .filter(w -> w.getDate().format(DateTimeFormatter.ofPattern("yyyy w"))
+                                .equals(pastExportWeek))
+                        .findFirst().get().getWeeklyWearableEnergy());
+
+        // 현재 달 값 넣어주기
+        energyPastAndNowDto.setMonthNowWearableEnergy(
+                monthlyWearableList.stream()
+                        .filter(w -> w.getDate().getYear() == LastExportTime.getYear() &&
+                                w.getDate().getMonth() == LastExportTime.getMonth())
+                        .findFirst().get().getMonthlyWearableEnergy());
+
+        // 이전 달 값 넣어주기
+        energyPastAndNowDto.setMonthPastWearableEnergy(
+                monthlyWearableList.stream()
+                        .filter(w -> w.getDate().getYear() == LastExportTime.minusMonths(1).getYear() &&
+                                w.getDate().getMonth() == LastExportTime.minusMonths(1).getMonth())
+                        .findFirst().get().getMonthlyWearableEnergy());
+
+        // 이번 년도 값 평균 구해서 넣어주기
+        energyPastAndNowDto.setYearNowWearableEnergy(
+                (long)monthlyWearableList.stream()
+                        .filter(w -> w.getDate().getYear() == LastExportTime.getYear())
+                        .map(MonthlyWearable::getMonthlyWearableEnergy)
+                        .mapToLong(num -> num)
+                        .summaryStatistics()
+                        .getAverage());
+
+        // 저번 년도 값 평균 구해서 넣어주기
+        energyPastAndNowDto.setYearPastWearableEnergy(
+                (long)monthlyWearableList.stream()
+                        .filter(w -> w.getDate().getYear() == LastExportTime.minusYears(1).getYear())
+                        .map(MonthlyWearable::getMonthlyWearableEnergy)
+                        .mapToLong(num -> num)
+                        .summaryStatistics()
+                        .getAverage());
+
+        return energyPastAndNowDto;
+    }
+
     // 심박수 달별
     @Override
     public List<RhrMonthlyDto> rhrMonthly(String userId) {

@@ -28,7 +28,7 @@ public interface Wearable {
     List<EnergyDailyDto> energyDaily(String userId);
 
     // 활동량 이전과 비교
-//    List<EnergyPastNowDto> energyPastNow(String userId);
+    EnergyPastAndNowDto energyPastAndNow(String userId);
 
     // 심박수 달별
     List<RhrMonthlyDto> rhrMonthly(String userId);
