@@ -1,0 +1,537 @@
+<template>
+  <div class="text-center">
+    <div class="container">
+      <div class="header">
+        <VueHeader
+          :VueHeaderTitle="VueHeaderTitle"
+          :VueHeaderContent="VueHeaderContent"
+        />
+      </div>
+      <!--  중간 유저 정보부분 -->
+      <div id="wearable-middle">
+        <!--  유저 정보 왼쪽 부분 -->
+        <div id="wearable-middle-left">
+          <!-- 유저 아바타 -->
+          <div
+            id="wearable-middle-left-up"
+            style="font-size: 1.7rem; font-weight: 800; margin-left: 5rem"
+          >
+          {{ nickname }}
+          </div>
+          <div id="wearable-middle-left-down">
+            <div id="wearable-profile-avatar">
+              <img
+                id="wearable-profile-img-avatar"
+                style="width: 160px"
+                :src="require(`/public/user-avatar/${avatar}.png`)"
+              />
+            </div>
+            <div id="wearable-profile-info">
+              <div class="wearable-profile-info-p">개별 점수</div>
+              <div class="wearable-profile-info-p">
+                <b-avatar
+                  variant="info"
+                  src="https://img.freepik.com/premium-psd/babies-shoe-isometric-icon-isolated-3d-illustration_47987-7353.jpg?w=740"
+                ></b-avatar
+                >&nbsp;&nbsp;
+                {{ lastTotalscore.totalScoreStep }}
+              </div>
+              <div class="wearable-profile-info-p">
+                <b-avatar
+                  variant="info"
+                  src="https://img.freepik.com/free-psd/3d-icon-environmental-ecology_23-2150022931.jpg?w=740&t=st=1680362562~exp=1680363162~hmac=119a6992d9cd8a5e26621cd33174453017604506addd49b2e7f0ae052d607d0c"
+                ></b-avatar
+                >&nbsp;&nbsp;
+                {{ lastTotalscore.totalScoreEnergy }}
+              </div>
+              <div class="wearable-profile-info-p">
+                <b-avatar
+                  variant="info"
+                  src="https://img.freepik.com/free-psd/3d-rendering-ui-icon_23-2149182291.jpg?w=740&t=st=1680362600~exp=1680363200~hmac=da0a1ca00d6ea5052ac453d74b153d1a791507c67455be361203f6d66237008b"
+                ></b-avatar
+                >&nbsp;&nbsp;
+                {{ lastTotalscore.totalScoreRhr }}
+              </div>
+              <div class="wearable-profile-info-p">
+                <b-avatar
+                  variant="info"
+                  src="https://img.freepik.com/free-psd/3d-rendering-emoji-icon_23-2149878836.jpg?w=740&t=st=1680362651~exp=1680363251~hmac=933c4ead45553f36fe2560ee7e6f79d014cacb173a7447cf0da70cf255f5a6bc"
+                ></b-avatar
+                >&nbsp;&nbsp;
+                {{ lastTotalscore.totalScoreStress }}
+              </div>
+              <div class="wearable-profile-info-p">
+                <b-avatar
+                  variant="info"
+                  src="https://img.freepik.com/premium-psd/3d-icon-furniture-with-bed_23-2150092300.jpg?w=740"
+                ></b-avatar
+                >&nbsp;&nbsp;
+                {{ lastTotalscore.totalScoreSleep }}
+              </div>
+            </div>
+            <!-- <div class="wearable-profile-info-p">
+                  <b-avatar variant="info" src="https://placekitten.com/300/300"></b-avatar>&nbsp;&nbsp;
+                  <p>{{ totalscore[2].totalScoreWeight }}</p>
+                </div> -->
+          </div>
+        </div>
+        <!--  중간 유저 정보 현재 종합 점수 & 과거 그래프 -->
+        <div id="wearable-middle-right">
+          <div id="wearable-middle-right-div">
+            <div id="wearable-middle-right-div-left">
+              <div
+                style="
+                  font-size: 18px;
+                  font-weight: 800;
+                  color: #5b5a63;
+                  margin-top: 1rem;
+                  margin-bottom: -2rem;
+                "
+              >
+                현재 종합 점수
+              </div>
+              <div
+                style="
+                  font-weight: 680;
+                  font-size: 100px;
+                  /* line-height: 180px; */
+                  /* text-transform: uppercase; */
+                  color: #5b5a63;
+                "
+              >
+                {{ lastTotalscore.totalScore }}
+              </div>
+              <!-- 전체 순위, 친구 순위 -->
+              <!-- <div
+                style="
+                  font-size: 14px;
+                  font-weight: 800;
+                  color: #5b5a63;
+                  margin-bottom: -0.5rem;
+                "
+              >
+                전체 순위&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1등
+              </div>
+              <hr style="border: 1px solid #5b5a63" />
+              <div
+                style="
+                  font-size: 14px;
+                  font-weight: 800;
+                  color: #5b5a63;
+                  margin-top: -0.5rem;
+                "
+              >
+                친구 순위&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1등
+              </div> -->
+              <!-- 전체 순위, 친구 순위 끝-->
+              <b-button id="total-score-rank">전체 순위 : {{ totalRank }}등</b-button>
+              <b-button id="total-score-rank">친구 순위 : {{ friendRank }}등</b-button>
+            </div>
+            <!-- 유저 종합점수 그래프 -->
+            <div id="WearablePastTotal">
+              <WearablePastTotal
+                :key="componentKey"
+                :data="data"
+                :categories="categories"
+              ></WearablePastTotal>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="wearable-footer">
+        <wearable-total></wearable-total>
+        <wearable-weight
+          style="margin-top: 10rem"
+          id="pdf-weight"
+        ></wearable-weight>
+        <wearable-step style="margin-top: 10rem" id="pdf-step"></wearable-step>
+        <step-word style="margin-top: 15rem"></step-word>
+        <wearable-energy
+          style="margin-top: 15rem"
+          id="pdf-energy"
+        ></wearable-energy>
+        <wearable-rhr style="margin-top: 10rem" id="pdf-rhr"></wearable-rhr>
+        <wearable-stress
+          style="margin-top: 10rem"
+          id="pdf-stress"
+        ></wearable-stress>
+        <stress-word style="margin-top: 15rem"></stress-word>
+        <wearable-sleep
+          style="margin-top: 15rem"
+          id="pdf-sleep"
+        ></wearable-sleep>
+      </div>
+      <!-- pdf 다운로드 버튼(클릭 시 버튼에 processing 애니메이션이 적용됨) -->
+      <button v-if="pdfBtnState == 'normal'" id="btn-pdf" @click="getPdf">
+        PDF 다운로드
+      </button>
+      <button v-else-if="pdfBtnState =='loading'" id="btn-pdf" @click="getPdf">
+        다운로드 중...
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      </button>
+      
+      <div class="mb-5"></div>
+    </div>
+  </div>
+</template>
+
+<script>
+import VueHeader from "@/components/common/VueHeader.vue";
+import WearableTotal from "@/components/wearable/WearableTotal.vue";
+import WearableStep from "@/components/wearable/WearableStep.vue";
+import WearableWeight from "@/components/wearable/WearableWeight.vue";
+import WearableEnergy from "@/components/wearable/WearableEnergy.vue";
+import WearableRhr from "@/components/wearable/WearableRhr.vue";
+import WearableStress from "@/components/wearable/WearableStress.vue";
+import WearableSleep from "@/components/wearable/WearableSleep.vue";
+import WearablePastTotal from "@/components/wearable/WearablePastTotal.vue";
+import StepWord from "@/components/wearable/StepWord.vue";
+import StressWord from "@/components/wearable/StressWord.vue";
+import axios from "axios";
+import { mapGetters } from "vuex";
+import html2canvas from "html2canvas";
+import * as pdf from "@grapecity/wijmo.pdf";
+
+export default {
+  name: "WearableView",
+  components: {
+    VueHeader,
+    WearableTotal,
+    WearableStep,
+    WearableWeight,
+    WearableEnergy,
+    WearableRhr,
+    WearableStress,
+    WearableSleep,
+    WearablePastTotal,
+    StepWord,
+    StressWord,
+  },
+  data: () => ({
+    data: [],
+    categories: [],
+    componentKey: 0,
+    nickname: "유저 닉네임",
+    avatar: "avatar0",
+    totalscore: [],
+    lastTotalscore: {},
+    VueHeaderTitle: "마이 헬스 데이터1",
+    VueHeaderContent: "나의 종합 건강 점수를 확인해보세요.",
+    // userNickname: user.userNickname,
+    pdfBtnState: "normal",
+    totalRank: 0,
+    friendRank: 0,
+  }),
+  created() {
+    this.totalScore();
+    this.getUserInfo();
+    this.getUserRank();
+  },
+
+  computed: {
+    ...mapGetters(["token", "user"]),
+    pdfBtnNormal() {
+      return this.pdfBtnState = "normal"
+    },
+    pdfBtnLoading() {
+      return this.pdfBtnState = "loading";
+    },
+  },
+
+  methods: {
+    async totalScore() {
+      await axios
+        .get("https://j8b106.p.ssafy.io/api/wearable/" + "score", {
+          // await axios.get('http://localhost:8083/wearable/' + 'score', {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then((res) => {
+          this.totalscore = res.data;
+          let lastIndex = this.totalscore.length - 1;
+          this.lastTotalscore = this.totalscore[lastIndex];
+          this.data = this.totalscore.map(function (e) {
+            return e.totalScore;
+          });
+          this.categories = this.totalscore.map(function (e) {
+            return e.createdDate;
+          });
+          this.componentKey += 1;
+        });
+    },
+
+    // 유저 히스토리 이미지 저장 및 pdf 추출하는 함수
+    async getPdf() {
+      this.pdfBtnLoading;
+      let historyImage = document.querySelector("#wearable-middle");
+      let pdfWeight = document.querySelector("#pdf-weight");
+      let pdfStep = document.querySelector("#pdf-step");
+      let pdfEnergy = document.querySelector("#pdf-energy");
+      let pdfRhr = document.querySelector("#pdf-rhr");
+      let pdfStress = document.querySelector("#pdf-stress");
+      let pdfSleep = document.querySelector("#pdf-sleep");
+
+      let doc = new pdf.PdfDocument({
+        header: {
+          height: 0, // no header
+        },
+        footer: {
+          height: 0, // no footer
+        },
+        ended: (sender, args) => pdf.saveBlob(args.blob, "Document.pdf"),
+      });
+
+      // 유저 히스토리 이미지 저장 먼저 한 다음에
+      await html2canvas(historyImage, {
+        y: -150,
+        height: 700,
+        backgroundColor: "#E2F2FA",
+      }).then((dataUrl) => {
+        console.log(dataUrl.toDataURL());
+        axios.post(
+          this.$store.state.serverBaseUrl + `/wearable/savehistory`,
+          { image: dataUrl.toDataURL() },
+          {
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          }
+        )
+        ;
+      });
+      // 체중 차트 추출
+      await html2canvas(pdfWeight, {
+        backgroundColor: "#E2F2FA",
+        height: 700,
+        y: -60,
+      }).then((dataUrl) => {
+        console.log(dataUrl);
+        doc.drawImage(dataUrl.toDataURL(), null, null, {
+          width: 480,
+        });
+        doc.moveDown();
+      });
+      // 걸음 차트 추출
+      await html2canvas(pdfStep, {
+        backgroundColor: "#E2F2FA",
+        height: 700,
+        y: -60,
+      }).then((dataUrl) => {
+        console.log(dataUrl);
+        doc.drawImage(dataUrl.toDataURL(), null, null, {
+          width: 480,
+        });
+        doc.moveDown();
+        doc.addPage();
+      });
+      // 에너지 차트 추출
+      await html2canvas(pdfEnergy, {
+        backgroundColor: "#E2F2FA",
+        height: 700,
+        y: -60,
+      }).then((dataUrl) => {
+        console.log(dataUrl);
+        doc.drawImage(dataUrl.toDataURL(), null, null, {
+          width: 480,
+        });
+        doc.moveDown();
+      });
+      // 심박변이 차트 추출
+      await html2canvas(pdfRhr, {
+        backgroundColor: "#E2F2FA",
+        height: 700,
+        y: -60,
+      }).then((dataUrl) => {
+        console.log(dataUrl);
+        doc.drawImage(dataUrl.toDataURL(), null, null, {
+          width: 480,
+        });
+        doc.moveDown();
+        doc.addPage();
+      });
+      // 스트레스 차트 추출
+      await html2canvas(pdfStress, {
+        backgroundColor: "#E2F2FA",
+        height: 700,
+        y: -60,
+      }).then((dataUrl) => {
+        console.log(dataUrl);
+        doc.drawImage(dataUrl.toDataURL(), null, null, {
+          width: 480,
+        });
+        doc.moveDown();
+      });
+      // 수면 차트 추출
+      await html2canvas(pdfSleep, {
+        backgroundColor: "#E2F2FA",
+        height: 700,
+        y: -60,
+      }).then((dataUrl) => {
+        console.log(dataUrl);
+        doc.drawImage(dataUrl.toDataURL(), null, null, {
+          width: 480,
+        });
+        doc.moveDown();
+        doc.addPage();
+      });
+      doc.end();
+      this.pdfBtnNormal;
+    },
+    getUserInfo() {
+      axios
+        .get(this.$store.state.serverBaseUrl + `/users/mypage`, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then((response) => {
+          console.log(response);
+          this.nickname = response.data.userNickname;
+          this.avatar = response.data.userAvatar;
+        });
+    },
+    getUserRank() {
+      axios
+        .get(this.$store.state.serverBaseUrl + "/wearable/user/score/rank", {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then((response) => {
+          this.totalRank = response.data[0];
+          this.friendRank = response.data[1];
+        });  
+    }
+  },
+};
+</script>
+
+<style>
+#btn-pdf {
+  width: 20%;
+  height: 35px;
+  border: none;
+  color: rgb(255, 255, 255);
+  font-weight: 600;
+  background: #3695be;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+#btn-pdf:hover {
+  width: 20%;
+  height: 35px;
+  border: none;
+  color: #3695be;
+  border: solid 2px #3695be;
+  font-weight: 600;
+  background: rgb(255, 255, 255);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+}
+
+#total-score-rank {
+  width: 60%;
+  height: 35px;
+  border: none;
+  color: #3695be;
+  font-weight: 600;
+  background: #cfeaf7;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  margin-top: -0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+#total-score-rank:hover {
+  width: 60%;
+  height: 35px;
+  border: none;
+  color: #3695be;
+  border: solid 2px #3695be;
+  font-weight: 600;
+  background: rgb(255, 255, 255);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  margin-top: -0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+#wearable-middle-left {
+  width: 35%;
+  height: 100%;
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+}
+#wearable-middle-left-down {
+  /* width: 35%;
+  height: 100%; */
+  margin-top: 0.5rem;
+  margin-left: 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: end;
+}
+#wearable-profile-img-avatar {
+  background-color: #ace3fa;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 50px;
+  margin-right: 1rem;
+}
+/* #wearable-profile-info {
+  background-color: #ace3fa;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+} */
+
+#wearable-middle {
+  width: 100%;
+  height: 330px;
+  display: flex;
+}
+
+#wearable-middle-right {
+  width: 65%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 4rem;
+  margin-top: 0.5rem;
+}
+.wearable-profile-info-p {
+  margin: 0.5rem;
+  font-size: 18px;
+  font-weight: 600;
+  color: #172176;
+}
+#wearable-middle-right-div {
+  width: 100%;
+  height: 90%;
+  background: #ffffff;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#wearable-middle-right-div-left {
+  width: 40%;
+  height: 90%;
+}
+#wearable-middle-right-div-right {
+  width: 60%;
+  height: 90%;
+}
+#WearablePastTotal {
+  margin-top: -1rem;
+  width: 95%;
+}
+#wearable-footer {
+  margin-top: 8rem;
+}
+</style>
